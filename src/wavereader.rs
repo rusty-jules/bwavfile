@@ -618,7 +618,7 @@ impl<R: Read + Seek> WaveReader<R> {
         Ok(None)
     }
 
-    fn get_chunk_extent_at_index(
+    pub fn get_chunk_extent_at_index(
         &mut self,
         fourcc: FourCC,
         index: u32,
