@@ -28,7 +28,7 @@ extern crate uuid;
 
 mod common_format;
 mod errors;
-mod fourcc;
+pub mod fourcc;
 
 mod list_form;
 mod parser;
