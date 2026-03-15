@@ -233,7 +233,14 @@ impl<R: Read + Seek> Parser<R> {
             event = Event::FinishParse;
             state = State::Complete;
         } else {
-            let this_fourcc = self.stream.read_fourcc()?;
+            let this_fourcc = match self.stream.read_fourcc() {
+                Ok(fourcc) => fourcc,
+                // we likely did a seek past the end of the file in the last chunk, abort parsing
+                Err(err) if io::ErrorKind::UnexpectedEof == err.kind() => {
+                    return Ok((Event::FinishParse, State::Complete))
+                }
+                Err(err) => return Err(err)
+            };
             let this_size: u64;
 
             if self.ds64state.contains_key(&this_fourcc) {
